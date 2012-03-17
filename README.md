@@ -2,9 +2,20 @@
 
 
 
-Damn Easy Key-Value Store written in F# 3.0, serializing in Protocol Buffers and using System.Runtinme.MemoryCache.
+Damn Easy Key-Value Store written in F# 3.0. KeVo's features:
+
+- serializing all Object in Protocol Buffers
+- using System.Runtinme.MemoryCache 
 
 ##Getting Started
+
+`Kevo.Store` contains two function for retrieve items:
+
+	val findById : int-> 't option
+
+	val findByQuery : ('t -> bool) -> 't list
+
+Let's say You have a class for stored your data:
 
 	let stringEmpty = ""
 
@@ -16,28 +27,25 @@ Damn Easy Key-Value Store written in F# 3.0, serializing in Protocol Buffers and
 		member val Syn : int array = [||] with get, set 				
 	end  
 
-
-`Kevo.Store` contains two function for retrieve items:
-
-	val FindById : int-> 't option
-
-	val FindByQuery : ('t -> bool) -> 't list
-
-
-You can find items by Id.:
+To find any item by id, use findById:
     
 	let myAddress = Kevo.Store.findById<Address> id
 
-It can find items by any predicate:
+Use predicate function for search by any templates:
 
 	let query (x:WordItem) =
 		x.Wordst.Contains("слово")
 	Kevo.Store.findByQuery<Address> query |> printfn "%A"
 
+##Roadmap
+
+- Indexeses
+- Write-log
+- Tests
 
 ##Performance
 
-See: PerformanceTests
+Few tests here: `Kevo.Performance`
 
 For Intel Core i5 2500K / 16gb RAM:
 
