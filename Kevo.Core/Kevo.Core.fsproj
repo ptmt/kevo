@@ -49,6 +49,7 @@
     <Compile Include="ProtoBuf.fs" />
     <None Include="packages.config" />
     <Compile Include="MemoryCache.fs" />
+    <Compile Include="Store.fsi" />
     <Compile Include="Store.fs" />
   </ItemGroup>
   <PropertyGroup>

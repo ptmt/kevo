@@ -24,7 +24,7 @@ let findById<'t> id =
 let alllist<'t> = 
     getDictionary<'t>.Values.ToArray()    
 
-let findByQuery query =
+let findByQuery<'t> query =
     alllist<'t> |> List.ofArray |> List.filter query
     
 let findWhere (query:System.Func<KeyValuePair<int,'t>, bool>) =
