@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Core", "Kevo.Core\Kevo.Core.fsproj", "{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Cli", "Kevo.Cli\Kevo.Cli.fsproj", "{46E165D4-CCDE-43A4-A98F-35B65FFFB206}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Performance", "Kevo.Performance\Kevo.Performance.fsproj", "{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
