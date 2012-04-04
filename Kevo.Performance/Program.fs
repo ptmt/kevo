@@ -30,7 +30,7 @@ type WordItem (word : string, wordst : string, suff : string, part : LexicalClas
     member val Syn : int array = syn with get, set 
     member val Prefix : string = prefix with get, set     
     new() = WordItem(empty_string, empty_string, empty_string, LexicalClass.Others, [||], empty_string)
-    override x.ToString() = x.Word
+    override x.ToString() = x.Syn |> List.ofArray |> List.fold (fun x y -> x + " " + y.ToString()) ""
  end  
 
 

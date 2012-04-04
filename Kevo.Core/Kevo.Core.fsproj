@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyInfo.fs" />
     <Compile Include="ProtoBuf.fs" />
     <None Include="packages.config" />
     <Compile Include="MemoryCache.fs" />

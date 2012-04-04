@@ -19,6 +19,9 @@ let inline testReadSumAllNones<'t> count =
 let inline testStraightWildcardSearch<'t> query = 
     Kevo.Store.findByQuery<'t> query |> printfn "%A"
 
+//let inline testStraightWildcardSearchSyn<'t> query = 
+    //Kevo.Store.findByQuery<'t> query |> List.collect (fun x -> x.Syn) 
+
 
 let testWrapper<'t> query =
     printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))

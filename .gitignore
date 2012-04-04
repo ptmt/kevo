@@ -13,6 +13,7 @@ Thumbs.db
 *.ncb
 *.suo
 *.tlb
+*.bin
 *.tlh
 *.bak
 *.cache
