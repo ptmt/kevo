@@ -1,19 +1,10 @@
 ﻿module Kevo.Store
 
-open Kevo.MemoryCache
-open Kevo.ProtoBuf
+
 open System.Collections.Generic
 open System.Linq
+open Kevo.Core
 
-let inline cacheIndex<'t> = typeof<'t>.GUID.ToString();
-
-let inline getDictionary<'t> =
-    let a = getFromCache cacheIndex<'t> 
-    match a with         
-        | null -> let b = deserialize<Dictionary<int, 't>>
-                  addToCache cacheIndex<'t> b |> printfn "added to cache %A"
-                  b
-        | _ -> a :?> Dictionary<int, 't>
 
 let findById<'t> id =
     let dict = getDictionary<'t>
@@ -31,3 +22,9 @@ let findWhere (query:System.Func<KeyValuePair<int,'t>, bool>) =
     getDictionary.Where(query)
 
 
+let append<'t> (o:'t) =     
+        Kevo.AppendLog.AppendSyncPart o |> Kevo.AppendLog.AppendAsyncPart        
+        
+
+let delete<'t> (id:int) = 
+    printfn "deleting"

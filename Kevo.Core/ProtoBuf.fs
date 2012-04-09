@@ -12,7 +12,7 @@ let serialize<'t> what =
     use file = System.IO.File.Create(path filename)
     Serializer.Serialize<'t>(file, what); 
     stopWatch.Stop()
-    printfn "serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
+    printfn "Protobuf serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
  
 
 let deserialize<'t> =  
@@ -21,5 +21,13 @@ let deserialize<'t> =
     use file = System.IO.File.OpenRead(path filename)
     let c = Serializer.Deserialize<'t>(file);   
     stopWatch.Stop()   
-    printfn "deserialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
+    printfn "Protobuf deserialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
     c
+
+//var model = TypeModel.Create();
+//
+//model.Add(typeof(Task), true);
+//
+//var compiledModel = model.Compile(path);
+//
+//compiledModel.Serialize(file, tasks);

@@ -5,12 +5,14 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Core", "Kevo.Core\Kevo
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Cli", "Kevo.Cli\Kevo.Cli.fsproj", "{46E165D4-CCDE-43A4-A98F-35B65FFFB206}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Performance", "Kevo.Performance\Kevo.Performance.fsproj", "{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B750A360-380A-479F-A88E-020072250601}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Benchmarks", "Kevo.Benchmarks\Kevo.Benchmarks.fsproj", "{41C2CB0C-9C39-4279-A42E-DE2711F6B2FD}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Kevo.Tests", "Kevo.Tests\Kevo.Tests.fsproj", "{87418C59-5CB5-4B9D-8DB7-4622D302A77D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,11 +28,15 @@ Global
 		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{46E165D4-CCDE-43A4-A98F-35B65FFFB206}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87418C59-5CB5-4B9D-8DB7-4622D302A77D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87418C59-5CB5-4B9D-8DB7-4622D302A77D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87418C59-5CB5-4B9D-8DB7-4622D302A77D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87418C59-5CB5-4B9D-8DB7-4622D302A77D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5AE23DD-98BD-4A90-863C-4CC220E56E3E}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,12 @@
 ﻿module Kevo.Store
 
-val findById : int-> 't option
+open System.Collections.Generic
 
-val findByQuery : ('t -> bool) -> 't list
+val findById<'t> : int -> 't option
+
+val findByQuery<'t> : ('t -> bool) -> 't list
+
+val append<'t> : 't -> unit
+
+val delete<'t> : int -> unit
+
