@@ -5,6 +5,7 @@ Thumbs.db
 *.exe
 *.pdb
 *.user
+*.sln
 *.aps
 *.pch
 *.vspscc
@@ -13,7 +14,6 @@ Thumbs.db
 *.ncb
 *.suo
 *.tlb
-*.bin
 *.tlh
 *.bak
 *.cache
