@@ -30,14 +30,16 @@ let inline testDeserializeFromProtoBuf<'t> =
     let b = Kevo.JsonNet.deserialize<Dictionary<int, 't>>    
     b
 
+
 let inline testAppend<'t>=
    // let c = Kevo.Store.getDictionary<'t>    
-    [0..10]|> List.map (fun x -> Kevo.Store.append x) |> ignore
-    System.Threading.Thread.Sleep(15000)
+   [0..100000]|> List.map (fun x -> Kevo.Store.append<string> (string x)) |> ignore
+   let dict = Kevo.Core.getDictionary<string>
+   dict.Count
 
 let testWrapper<'t> query =
  //   printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))
  //   printfn "%A " (duration (fun () -> testStraightWildcardSearch<'t> query))
 //    printfn "%A " (duration (fun () -> testDeserializeFromProtoBuf<'t>))
     printfn "%A" (duration (fun () -> testAppend<'t>))
-    
+    System.Threading.Thread.Sleep(15000)

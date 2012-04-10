@@ -11,12 +11,13 @@ open ProtoBuf
 let inline cacheIndex<'t> = typeof<'t>.GUID.ToString();
 
 let getDictionary<'t> =
-    let a = getFromCache cacheIndex<'t> 
+    let a = getFromCache cacheIndex<'t>     
     match a with         
         | null -> let b = deserialize<Dictionary<int, 't>>
-                  addToCache cacheIndex<'t> b |> printfn "added to cache %A"
+                  addToCache cacheIndex<'t> b |> printfn "%A added to cache %A" cacheIndex<'t>
                   b
         | _ -> a :?> Dictionary<int, 't>
 
 let saveDictionary<'t> dict =
-     serialize<Dictionary<int, 't>> dict
+     addToCache cacheIndex<'t> dict
+     //serialize<Dictionary<int, 't>> dict
