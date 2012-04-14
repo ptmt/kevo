@@ -11,7 +11,9 @@ let serialize<'t> what =
     let filename = typeof<'t>.GUID.ToString();
     let stopWatch = Stopwatch.StartNew()
     use file = System.IO.File.Create(path filename)
-    Serializer.Serialize<'t>(file, what); 
+    lock file (fun () -> Serializer.Serialize<'t>(file, what); 
+                         file.SetLength(file.Position); // fix truncated 
+                         file.Close())
     stopWatch.Stop()
     printfn "Protobuf serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
  

@@ -86,8 +86,9 @@ let commit<'t> =
 // slow write to memory and serialize
 let appendAsync<'t> index o = 
     async {        
-        let dict = Kevo.Core.getDictionary<'t>        
-        dict.Add(index, o)
-        Kevo.Core.saveDictionary dict |> ignore
-        commit<'t> |> ignore          
+        let dict = Kevo.Core.getDictionary<'t>      
+        if dict.ContainsKey(index) = false then
+            dict.Add(index, o)
+            Kevo.Core.saveDictionary dict |> ignore
+            commit<'t> |> ignore          
     } |> Async.Start
