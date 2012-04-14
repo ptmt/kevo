@@ -65,12 +65,16 @@ let getFiles<'t> =
 let processFile (filename:string) = 
     let newfilename = filename.Replace(".bin", ".temp");
     System.IO.File.Move(filename, newfilename)
+    use file = System.IO.File.Create(newfilename)
+    let items = Serializer.DeserializeItems(file, PrefixStyle.Base128, -1) |> List.ofSeq
+    file.Close()
     System.IO.File.Delete(newfilename)
+    items
 
 let commit<'t> =     
     let files = getFiles<'t>  
     if files.Length = 0 || (files |> Array.filter (fun x -> x.Contains(".temp"))).Length > 0 then
         false
     else
-        files |> (fun x-> processFile x)
+        files |> Array.map (fun x-> processFile x)
         true
