@@ -23,8 +23,8 @@ let findWhere (query:System.Func<KeyValuePair<int,'t>, bool>) =
 
 
 let append<'t> (o:'t) =     
-        Kevo.AppendLog.appendP<'t> o 
-      //  Kevo.AppendLog.AppendAsyncPart<'t> o   
+        Kevo.AppendLog.appendSync<'t> o 
+        Kevo.AppendLog.appendAsync<'t> o   
         
 
 let delete<'t> (id:int) = 

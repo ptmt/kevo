@@ -10,3 +10,6 @@ let getFromCache itemKey=
     let cache = MemoryCache.Default;
     cache.Get(itemKey)
 
+let clearCache itemKey = 
+    let cache = MemoryCache.Default
+    lock cache (fun () -> cache.Remove(itemKey)) |> ignore 

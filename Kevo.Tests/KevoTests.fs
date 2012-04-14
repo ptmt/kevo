@@ -23,16 +23,23 @@ let ``kevo should be able to append some integer`` () =
 
 [<Test>]
 let ``kevo should be able to commit int`` () =
-    Kevo.Store.append<int> 1             
+    let dict = Kevo.Core.getDictionary<int>
+    let length_before = dict.Count
+
+    Kevo.Store.append<int> 1      
+   // Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
     // check file
-    let files = checkFilesForType<int>
-    files.Length > 0 |> shouldBeTrue
+ //   let files = checkFilesForType<int>
+ //   files.Length > 0 |> shouldBeTrue
     Kevo.AppendLog.commit<int> |> shouldBeTrue
-    // file is must be deleted
+    // file must be deleted
     let files = checkFilesForType<int>
     files.Length = 0 |> shouldBeTrue
-    // dictionary has one ore count
-    
+    // dictionary has one more count
+    Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
+    // delete cache and try again
+    Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<int>
+    Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
 
 [<Test>]
 let ``kevo should be correct process concurency commiting`` () =
