@@ -17,30 +17,33 @@ let getpath typename second =
 
 [<ProtoContract>]
 type AppendLog<'t> = 
-    System.DateTime * string * string * 't
+    int * string * string * 't
 
 
 // json    
-let appendJ<'t> o =       
-    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o
+let appendJ<'t> o =    
+
+    let dict = Kevo.Core.getDictionary<'t>      
+    let append:AppendLog<'t> = dict.Count, typeof<'t>.ToString(), "insert", o
     let serializer = new JsonSerializer();        
     use sw = new StreamWriter(getpath (string typeof<'t>) DateTime.Now.Second)
     use writer = new JsonTextWriter(sw)
     serializer.Serialize(writer, append);   
 
 // protobuf 
-let appendSync<'t> o = 
+let appendSync<'t> index o =     
     use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o    
-    
+    let append:AppendLog<'t> = index, typeof<'t>.ToString(), "insert", o        
     lock file (fun () -> Serializer.SerializeWithLengthPrefix<AppendLog<'t>>(file, append, PrefixStyle.Base128)) 
+    
    
 
 // quick write to append log
-let AppendSyncPart<'t> o = 
+let AppendSyncBinary<'t> o = 
+    let dict = Kevo.Core.getDictionary<'t>     
     let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
     use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o      
+    let append:AppendLog<'t> = dict.Count, typeof<'t>.ToString(), "insert", o      
     lock file (fun () -> formatter.Serialize(file, append))
     
 
@@ -49,19 +52,19 @@ let AppendSyncPart<'t> o =
 let getFiles<'t> = 
     System.IO.Directory.GetFiles(dataPath) |> Array.filter (fun x -> x.Contains(string typeof<'t>))
 
-let inline getinfo (_, _, a, b) = a, b
+let inline getinfo (i, _, a, b) = i, a, b
 
-let processItem<'t> x = 
-    let a, b = getinfo x
+let inline processItem<'t> x = 
+    let index, a, b = getinfo x
     match a with 
         | "insert" -> let dict = Kevo.Core.getDictionary<'t>
-                      if dict.ContainsValue(b) = false then                        
-                        dict.Add(dict.Count, b)
-                      Kevo.Core.saveDictionary dict |> ignore
+                      if dict.ContainsKey(index) = false then                        
+                        dict.Add(index, b)
+                        Kevo.Core.saveDictionary dict |> ignore
                       Kevo.ProtoBuf.serialize<System.Collections.Generic.Dictionary<int, 't>> dict
         | _ -> printfn "unsupported operation"
 
-let processFile<'t> (filename:string) = 
+let inline processFile<'t> (filename:string) = 
     let newfilename = filename.Replace(".bin", ".temp");
     System.IO.File.Move(filename, newfilename)
     use file = System.IO.File.OpenRead(newfilename)
@@ -81,10 +84,10 @@ let commit<'t> =
 
 
 // slow write to memory and serialize
-let appendAsync<'t> o = 
+let appendAsync<'t> index o = 
     async {        
         let dict = Kevo.Core.getDictionary<'t>        
-        dict.Add(dict.Count, o)
+        dict.Add(index, o)
         Kevo.Core.saveDictionary dict |> ignore
         commit<'t> |> ignore          
     } |> Async.Start

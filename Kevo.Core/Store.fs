@@ -21,10 +21,12 @@ let findByQuery<'t> query =
 let findWhere (query:System.Func<KeyValuePair<int,'t>, bool>) =
     getDictionary.Where(query)
 
+type a = unit->unit
 
-let append<'t> (o:'t) =     
-        Kevo.AppendLog.appendSync<'t> o 
-        Kevo.AppendLog.appendAsync<'t> o   
+let append<'t> (i:int, o:'t, f:a option) =     
+        Kevo.AppendLog.appendSync<'t> i o
+        if f.IsSome then f.Value()
+        Kevo.AppendLog.appendAsync<'t> i o
         
 
 let delete<'t> (id:int) = 

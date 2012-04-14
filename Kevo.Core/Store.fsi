@@ -6,7 +6,7 @@ val findById<'t> : int -> 't option
 
 val findByQuery<'t> : ('t -> bool) -> 't list
 
-val append<'t> : 't -> unit
+val append<'t> :  int * 't * (unit -> unit) option -> unit
 
-val delete<'t> : int -> unit
+val delete<'t> :  int -> unit
 

@@ -34,7 +34,7 @@ let inline testDeserializeFromProtoBuf<'t> =
 let inline testAppend c =   
    let timer = new System.Diagnostics.Stopwatch()
    timer.Start()
-   duration (fun () -> [0..c]|> List.map (fun x -> Kevo.Store.append<string> (string x)) |> ignore)   
+   [0..c] |> List.map (fun x -> Kevo.Store.append<string>(x, (string x), None))  |> ignore
    let perf = float c / timer.Elapsed.TotalMilliseconds
    printfn "%i; %f" c perf
 
@@ -50,7 +50,8 @@ let testWrapper<'t> query =
  //   printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))
  //   printfn "%A " (duration (fun () -> testStraightWildcardSearch<'t> query))
 //    printfn "%A " (duration (fun () -> testDeserializeFromProtoBuf<'t>))
-    printfn "%A" (duration "appenSync" (fun () -> Kevo.AppendLog.appendSync<int> 1))
-    printfn "%A" (duration "commit" (fun () -> Kevo.AppendLog.commit<int>)) 
- //   testAppendLoop 100000 10000
+
+   // printfn "%A" (duration "appenSync" (fun () -> Kevo.AppendLog.appendSync<int> 1 1))
+   // printfn "%A" (duration "commit" (fun () -> Kevo.AppendLog.commit<int>)) 
+    testAppendLoop 100000 10000
    
