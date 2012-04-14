@@ -27,7 +27,7 @@ let ``kevo should be able to commit int`` () =
     let length_before = dict.Count
     length_before > 0 |> shouldBeTrue
     let random_value = System.Random().Next()
-    Kevo.AppendLog.appendSync<int> 0 random_value     
+    Kevo.AppendLog.appendSync<int> length_before random_value     
     Kevo.AppendLog.commit<int> |> shouldBeTrue
     // file must be deleted
     let files = checkFilesForType<int>
