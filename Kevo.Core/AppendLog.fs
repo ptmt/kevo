@@ -64,11 +64,12 @@ let processItem<'t> x =
 let processFile<'t> (filename:string) = 
     let newfilename = filename.Replace(".bin", ".temp");
     System.IO.File.Move(filename, newfilename)
-    use file = System.IO.File.Create(newfilename)
-    let items = Serializer.DeserializeItems<AppendLog<'t>>(file, PrefixStyle.Base128, -1) |> List.ofSeq
-    file.Close()
-    System.IO.File.Delete(newfilename)
-    items |> List.map processItem<'t>
+    use file = System.IO.File.OpenRead(newfilename)
+    lock file (fun () -> let items = Serializer.DeserializeItems<AppendLog<'t>>(file, PrefixStyle.Base128, 0) |> List.ofSeq
+                         file.Close()
+                         System.IO.File.Delete(newfilename)
+                         items |> List.map (fun x -> processItem<'t> x))
+   
 
 let commit<'t> =     
     let files = getFiles<'t>  
@@ -81,12 +82,9 @@ let commit<'t> =
 
 // slow write to memory and serialize
 let appendAsync<'t> o = 
-    async {
-        // check memory cache and file                
-        let dict = Kevo.Core.getDictionary<'t>
-        // add to memory
+    async {        
+        let dict = Kevo.Core.getDictionary<'t>        
         dict.Add(dict.Count, o)
         Kevo.Core.saveDictionary dict |> ignore
-        commit<'t>     
-       
-        } |> Async.Start
+        commit<'t> |> ignore          
+    } |> Async.Start

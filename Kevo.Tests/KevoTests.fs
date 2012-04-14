@@ -25,21 +25,21 @@ let ``kevo should be able to append some integer`` () =
 let ``kevo should be able to commit int`` () =
     let dict = Kevo.Core.getDictionary<int>
     let length_before = dict.Count
-
-    Kevo.Store.append<int> 1      
-   // Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
-    // check file
- //   let files = checkFilesForType<int>
- //   files.Length > 0 |> shouldBeTrue
+    length_before > 0 |> shouldBeTrue
+    let random_value = System.Random().Next()
+    Kevo.AppendLog.appendSync<int> random_value      
+  
     Kevo.AppendLog.commit<int> |> shouldBeTrue
     // file must be deleted
     let files = checkFilesForType<int>
     files.Length = 0 |> shouldBeTrue
     // dictionary has one more count
     Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
+    Kevo.Core.getDictionary<int>.ContainsValue(random_value) |> shouldBeTrue
     // delete cache and try again
     Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<int>
     Kevo.Core.getDictionary<int>.Count - length_before = 1 |> shouldBeTrue
+    Kevo.Core.getDictionary<int>.ContainsValue(random_value) |> shouldBeTrue
 
 [<Test>]
 let ``kevo should be correct process concurency commiting`` () =

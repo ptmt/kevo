@@ -6,11 +6,11 @@ open Kevo.JsonNet
 open System.Collections.Generic
 open ProtoBuf
 
-let duration f = 
+let duration name f = 
     let timer = new System.Diagnostics.Stopwatch()
     timer.Start()
     let returnValue = f()
-    printfn "%A Ellapsed Time: %f ms" (f.GetType().ToString()) timer.Elapsed.TotalMilliseconds
+    printfn "%A Ellapsed Time: %f ms" name timer.Elapsed.TotalMilliseconds
     returnValue 
 
 
@@ -38,12 +38,11 @@ let inline testAppend c =
    let perf = float c / timer.Elapsed.TotalMilliseconds
    printfn "%i; %f" c perf
 
-//let inline testRead = 
-    
+   
 let testAppendLoop lmax step= 
     [0..step..lmax] |> List.map (fun x -> testAppend x) |> ignore
     //System.Threading.Thread.Sleep(15000)
-    
+
 
 
   
@@ -51,7 +50,7 @@ let testWrapper<'t> query =
  //   printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))
  //   printfn "%A " (duration (fun () -> testStraightWildcardSearch<'t> query))
 //    printfn "%A " (duration (fun () -> testDeserializeFromProtoBuf<'t>))
-    //printfn "%A" (duration (fun () -> testAppend 1))
-    //printfn "%A" (duration (fun () -> Kevo.AppendLog.commit<string>)) 
-    testAppendLoop 100000 10000
-    //testReadWriteDifferentTypes
+    printfn "%A" (duration "appenSync" (fun () -> Kevo.AppendLog.appendSync<int> 1))
+    printfn "%A" (duration "commit" (fun () -> Kevo.AppendLog.commit<int>)) 
+ //   testAppendLoop 100000 10000
+   
