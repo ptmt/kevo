@@ -39,7 +39,7 @@ let appendP<'t> o =
 // quick write to append log
 let AppendSyncPart<'t> o = 
     let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-    use file = new FileStream(getpath ((string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
+    use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
     let append:AppendLog = DateTime.Now, typeof<'t>.ToString(), "insert", o      
     lock file (fun () -> formatter.Serialize(file, append))
     
@@ -59,5 +59,18 @@ let AppendAsyncPart<'t> o =
        
         } |> Async.Start
 
+let getFiles<'t> = 
+    System.IO.Directory.GetFiles(dataPath) |> Array.filter (fun x -> x.Contains(string typeof<'t>))
 
-    
+let processFile (filename:string) = 
+    let newfilename = filename.Replace(".bin", ".temp");
+    System.IO.File.Move(filename, newfilename)
+    System.IO.File.Delete(newfilename)
+
+let commit<'t> =     
+    let files = getFiles<'t>  
+    if files.Length = 0 || (files |> Array.filter (fun x -> x.Contains(".temp"))).Length > 0 then
+        false
+    else
+        files |> (fun x-> processFile x)
+        true
