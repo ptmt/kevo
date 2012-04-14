@@ -59,6 +59,7 @@
     <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization.Xml" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Kevo.Core\Kevo.Core.fsproj">

@@ -45,3 +45,5 @@ let query (x:WordItem) =
 
 
 Kevo.PerformanceTests.testWrapper<WordItem> query
+
+System.Console.ReadKey(true) |> ignore

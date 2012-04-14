@@ -4,7 +4,7 @@ open System.Diagnostics
 open Kevo.Store
 open Kevo.JsonNet
 open System.Collections.Generic
-
+open ProtoBuf
 
 let duration f = 
     let timer = new System.Diagnostics.Stopwatch()
@@ -31,15 +31,27 @@ let inline testDeserializeFromProtoBuf<'t> =
     b
 
 
-let inline testAppend<'t>=
-   // let c = Kevo.Store.getDictionary<'t>    
-   [0..100000]|> List.map (fun x -> Kevo.Store.append<string> (string x)) |> ignore
-   let dict = Kevo.Core.getDictionary<string>
-   dict.Count
+let inline testAppend c =   
+   let timer = new System.Diagnostics.Stopwatch()
+   timer.Start()
+   duration (fun () -> [0..c]|> List.map (fun x -> Kevo.Store.append<string> (string x)) |> ignore)   
+   let perf = float c / timer.Elapsed.TotalMilliseconds
+   printfn "%i; %f" c perf
 
+//let inline testRead = 
+    
+let testAppendLoop lmax step= 
+    [0..step..lmax] |> List.map (fun x -> testAppend x) |> ignore
+    //System.Threading.Thread.Sleep(15000)
+    "end"
+
+
+  
 let testWrapper<'t> query =
  //   printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))
  //   printfn "%A " (duration (fun () -> testStraightWildcardSearch<'t> query))
 //    printfn "%A " (duration (fun () -> testDeserializeFromProtoBuf<'t>))
-    printfn "%A" (duration (fun () -> testAppend<'t>))
-    System.Threading.Thread.Sleep(15000)
+    //printfn "%A" (duration (fun () -> testAppend 1))
+    //printfn "%A" (duration (fun () -> Kevo.AppendLog.commit<string>)) 
+    testAppendLoop 100000 10000
+    //testReadWriteDifferentTypes
