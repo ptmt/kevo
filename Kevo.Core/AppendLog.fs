@@ -16,13 +16,13 @@ let getpath typename second =
 // datetime, string of type, guid, obj
 
 [<ProtoContract>]
-type AppendLog = 
-    System.DateTime * string * string * obj
+type AppendLog<'t> = 
+    System.DateTime * string * string * 't
 
 
 // json    
 let appendJ<'t> o =       
-    let append:AppendLog = DateTime.Now, typeof<'t>.ToString(), "insert", o
+    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o
     let serializer = new JsonSerializer();        
     use sw = new StreamWriter(getpath (string typeof<'t>) DateTime.Now.Second)
     use writer = new JsonTextWriter(sw)
@@ -31,16 +31,16 @@ let appendJ<'t> o =
 // protobuf 
 let appendP<'t> o = 
     use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog = DateTime.Now, typeof<'t>.ToString(), "insert", o    
+    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o    
     
-    lock file (fun () -> Serializer.SerializeWithLengthPrefix<AppendLog>(file, append, PrefixStyle.Base128)) 
+    lock file (fun () -> Serializer.SerializeWithLengthPrefix<AppendLog<'t>>(file, append, PrefixStyle.Base128)) 
    
 
 // quick write to append log
 let AppendSyncPart<'t> o = 
     let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
     use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog = DateTime.Now, typeof<'t>.ToString(), "insert", o      
+    let append:AppendLog<'t> = DateTime.Now, typeof<'t>.ToString(), "insert", o      
     lock file (fun () -> formatter.Serialize(file, append))
     
 
@@ -62,19 +62,24 @@ let AppendAsyncPart<'t> o =
 let getFiles<'t> = 
     System.IO.Directory.GetFiles(dataPath) |> Array.filter (fun x -> x.Contains(string typeof<'t>))
 
-let processFile (filename:string) = 
+let inline getinfo (_, _, a, b) = a, b
+
+let processItem x = 
+    printfn "%A" x
+
+let processFile<'t> (filename:string) = 
     let newfilename = filename.Replace(".bin", ".temp");
     System.IO.File.Move(filename, newfilename)
     use file = System.IO.File.Create(newfilename)
-    let items = Serializer.DeserializeItems(file, PrefixStyle.Base128, -1) |> List.ofSeq
+    let items = Serializer.DeserializeItems<AppendLog<'t>>(file, PrefixStyle.Base128, -1) |> List.ofSeq
     file.Close()
     System.IO.File.Delete(newfilename)
-    items
+    items |> List.map processItem
 
 let commit<'t> =     
     let files = getFiles<'t>  
     if files.Length = 0 || (files |> Array.filter (fun x -> x.Contains(".temp"))).Length > 0 then
         false
     else
-        files |> Array.map (fun x-> processFile x)
+        files |> Array.map (fun x-> processFile<'t> x) |> ignore
         true

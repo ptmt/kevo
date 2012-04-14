@@ -17,8 +17,9 @@ let checkFilesForType<'t> =
 
 [<Test>]
 let ``kevo should be able to append some integer`` () =
+    checkFilesForType<int> |> Array.map (fun x -> System.IO.File.Delete x) |> ignore
     Kevo.Store.append<int> 1         
-    System.IO.File.Exists(Kevo.AppendLog.appendPath (string typeof<int>) DateTime.Now.Second) |> shouldBeTrue
+    checkFilesForType<int>.Length = 1 |> shouldBeTrue
 
 [<Test>]
 let ``kevo should be able to commit int`` () =
@@ -26,7 +27,7 @@ let ``kevo should be able to commit int`` () =
     // check file
     let files = checkFilesForType<int>
     files.Length > 0 |> shouldBeTrue
-    Kevo.AppendLog.commit<int>
+    Kevo.AppendLog.commit<int> |> shouldBeTrue
     // file is must be deleted
     let files = checkFilesForType<int>
     files.Length = 0 |> shouldBeTrue

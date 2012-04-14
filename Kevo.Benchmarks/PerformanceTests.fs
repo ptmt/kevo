@@ -43,7 +43,7 @@ let inline testAppend c =
 let testAppendLoop lmax step= 
     [0..step..lmax] |> List.map (fun x -> testAppend x) |> ignore
     //System.Threading.Thread.Sleep(15000)
-    "end"
+    
 
 
   
