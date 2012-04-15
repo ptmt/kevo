@@ -63,7 +63,7 @@ let testWrapper<'t> query =
    // printfn "%A" (duration "appenSync" (fun () -> Kevo.AppendLog.appendSync<int> 1 1))
    // printfn "%A" (duration "commit" (fun () -> Kevo.AppendLog.commit<int>)) 
    //   testAppendLoop 100000 10000
-       testAppendLoop 10000 1000
+       testAppendLoop 100000 10000
 
 
    

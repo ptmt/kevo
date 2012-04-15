@@ -28,6 +28,8 @@ let ``kevo should be able to commit int`` () =
     
     let random_value = System.Random().Next()
     Kevo.AppendLog.appendSync<int> length_before random_value     
+    // just for for x.Contains(string DateTime.Now.Second) = false
+    System.Threading.Thread.Sleep(1000)
     Kevo.AppendLog.commit<int> |> shouldBeTrue
     // file must be deleted
     let files = checkFilesForType<int>
@@ -43,7 +45,8 @@ let ``kevo should be able to commit int`` () =
 
 [<Test>]
 let ``kevo should be correct process concurency commiting`` () =
-    Kevo.Store.append<float32>(1, 1.0f, None)           
+    Kevo.Store.append<float32>(1, 1.0f, None)   
+    System.Threading.Thread.Sleep(1000)        
     async { [1..10] |> List.map (fun x -> Kevo.AppendLog.commit<float32>) |> ignore } |> Async.RunSynchronously
     
     checkFilesForType<float32>.Length = 0 |> shouldBeTrue
