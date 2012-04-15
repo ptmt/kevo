@@ -43,6 +43,7 @@ let ``kevo should be able to commit int`` () =
 
 [<Test>]
 let ``kevo should be correct process concurency commiting`` () =
-    Kevo.Store.append<int>(1, 1, None)           
-    async { [1..10] |> List.map (fun x -> Kevo.AppendLog.commit<int>) |> ignore } |> Async.RunSynchronously
-    checkFilesForType<int>.Length = 0 |> shouldBeTrue
+    Kevo.Store.append<float32>(1, 1.0f, None)           
+    async { [1..10] |> List.map (fun x -> Kevo.AppendLog.commit<float32>) |> ignore } |> Async.RunSynchronously
+    
+    checkFilesForType<float32>.Length = 0 |> shouldBeTrue

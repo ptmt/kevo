@@ -7,10 +7,9 @@ open System.Reflection
 let path filename =
     "C:\\data\\" + filename
 
-let serialize<'t> what = 
-    let filename = typeof<'t>.GUID.ToString();
+let serialize<'t> what where =     
     let stopWatch = Stopwatch.StartNew()
-    use file = System.IO.File.Create(path filename)
+    use file = System.IO.File.Create(path where)
     lock file (fun () -> Serializer.Serialize<'t>(file, what); 
                          file.SetLength(file.Position); // fix truncated 
                          file.Close())
@@ -18,12 +17,12 @@ let serialize<'t> what =
     printfn "Protobuf serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
  
 
-let deserialize<'t> =  
-    let filename = typeof<'t>.GUID.ToString();
+let deserialize<'t> from =    
     let stopWatch = Stopwatch.StartNew()
-    if (System.IO.File.Exists(path filename)) then 
-        use file = System.IO.File.OpenRead(path filename)
+    if (System.IO.File.Exists(path from)) then 
+        use file = System.IO.File.OpenRead(path from)
         let c = Serializer.Deserialize<'t>(file);   
+        file.Close()
         stopWatch.Stop()   
         printfn "Protobuf deserialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
         c

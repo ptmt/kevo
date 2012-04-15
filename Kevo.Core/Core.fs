@@ -13,7 +13,7 @@ let inline cacheIndex<'t> = typeof<'t>.GUID.ToString();
 let getDictionary<'t> =
     let a = getFromCache cacheIndex<'t>     
     match a with         
-        | null -> let b = deserialize<Dictionary<int, 't>>
+        | null -> let b = deserialize<Dictionary<int, 't>> cacheIndex<'t>
                   addToCache cacheIndex<'t> b |> printfn "%A added to cache %A" cacheIndex<'t>
                   b
         | _ -> a :?> Dictionary<int, 't>
