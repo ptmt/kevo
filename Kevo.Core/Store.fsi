@@ -10,4 +10,4 @@ val append<'t> :  int * 't * (unit -> unit) option -> unit
 
 val delete<'t> :  int -> unit
 
-val memo : (unit -> obj) -> obj
+val memo : (unit -> 't) -> 't
