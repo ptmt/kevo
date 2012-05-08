@@ -28,6 +28,14 @@ let append<'t> (i:int, o:'t, f:a option) =
         if f.IsSome then f.Value()
         Kevo.AppendLog.appendAsync<'t> i o
         
+let memo f =     
+    let cacheIndex = (f.GetType().GUID.ToString())
+    let a = Kevo.MemoryCache.getFromCache cacheIndex
+    match a with         
+        | null -> let function_result = f()
+                  Kevo.MemoryCache.addToCache cacheIndex function_result |> ignore
+                  function_result
+        | b -> b
 
 let delete<'t> (id:int) = 
     printfn "deleting"

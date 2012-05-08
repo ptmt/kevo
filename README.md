@@ -13,6 +13,16 @@ Damn Easy Key-Value Store written in F# 3.0.
 
 	val findByQuery : ('t -> bool) -> 't list
 
+And function for insert items:
+	
+	val append<'t> :  int * 't * (unit -> unit) option -> unit
+
+##Create/insert
+
+By default if storage is not exist 
+
+##Read
+
 Let's say you have a class for storing your data:
 
 	let stringEmpty = ""
@@ -35,11 +45,6 @@ Use predicate function for search by any templates:
 		x.Wordst.Contains("слово")
 	Kevo.Store.findByQuery<Address> query |> printfn "%A"
 
-##Roadmap
-
-- Indexeses
-- Write-log
-- Tests
 
 ##Benchmarks
 
