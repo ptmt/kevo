@@ -14,7 +14,7 @@ let serialize<'t> what where =
                          file.SetLength(file.Position); // fix truncated 
                          file.Close())
     stopWatch.Stop()
-    printfn "Protobuf serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
+    //printfn "Protobuf serialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
  
 
 let deserialize<'t> from =    
@@ -24,7 +24,7 @@ let deserialize<'t> from =
         let c = Serializer.Deserialize<'t>(file);   
         file.Close()
         stopWatch.Stop()   
-        printfn "Protobuf deserialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
+        //printfn "Protobuf deserialization complete in %f ms" stopWatch.Elapsed.TotalMilliseconds   
         c
     else        
         let t = System.Activator.CreateInstance(typeof<'t>)

@@ -37,7 +37,7 @@ let ``kevo should be able to commit int into memory and flush to disk`` () =
     
     let random_value = System.Random(100).Next()
     Kevo.AppendLog.appendSync<int> length_before random_value     
-    //System.Threading.Thread.Sleep(1000)  
+  
     Kevo.AppendLog.commit<int> |> shouldBeTrue   
     
     // all files must be deleted

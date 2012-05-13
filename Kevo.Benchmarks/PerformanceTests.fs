@@ -24,7 +24,7 @@ let inline testStraightWildcardSearch<'t> query =
     //Kevo.Store.findByQuery<'t> query |> List.collect (fun x -> x.Syn) 
 let inline testDeserializeFromProtoBuf<'t> =
     let c = Kevo.Core.getDictionary<'t>
-    //let k = Kevo.ProtoBuf.deserialize<'t>
+    //let k = Kevo.ProtoBuf.deserialize<'t>  
     Kevo.ProtoBuf.serialize<Dictionary<int, 't>> c (string typeof<'t>.GUID)
     Kevo.JsonNet.serialize<Dictionary<int, 't>> c
     let b = Kevo.JsonNet.deserialize<Dictionary<int, 't>>    
@@ -37,17 +37,14 @@ let inline testAppend c =
    [0..c] |> List.map (fun x -> Kevo.Store.append<string>(x, (string x), None))  |> ignore
    let perf = float c / timer.Elapsed.TotalMilliseconds
    printfn "%i; %f" c perf
-   Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<string>
-   printfn "%A" Kevo.Core.getDictionary<string>.Count
-
+   
 let inline testUpdate c =   
    let timer = new System.Diagnostics.Stopwatch()
    timer.Start()
    [0..c] |> List.map (fun x -> Kevo.Store.update<string>(x, (string x)))  |> ignore
    let perf = float c / timer.Elapsed.TotalMilliseconds
    printfn "%i; %f" c perf
-   Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<string>
-   printfn "%A" Kevo.Core.getDictionary<string>.Count
+   
 
    
 let testAppendLoop lmax step type_of_append= 
@@ -67,9 +64,10 @@ let testAppendLoop lmax step type_of_append=
 
   
 let testWrapper<'t> query = 
-       //testAppendLoop 100000 10000
+       
        testAppendLoop 100000 10000 "insert"
+       printfn "update"
        testAppendLoop 100000 10000 "update"
-
+       printfn "ok"
 
    

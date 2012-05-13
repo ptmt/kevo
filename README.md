@@ -1,9 +1,9 @@
 #KeVo
 
-Damn Easy Key-Value Store written in F# 3.0. 
+KeVo is a Damn Easy Key-Value Store written in F# 3.0. It is in-memory store using System.Runtime.MemoryCache with full synchronized append log.
 
-- serializing all Object in Protocol Buffers or Json.NET
-- using System.Runtinme.MemoryCache 
+It serialize all objects in Protocol Buffers (Json.NET or binary serialization optional)
+
 
 ##Getting Started
 
@@ -13,13 +13,20 @@ Damn Easy Key-Value Store written in F# 3.0.
 
 	val findByQuery : ('t -> bool) -> 't list
 
-And function for insert items:
+insert items:
 	
 	val append<'t> :  int * 't * (unit -> unit) option -> unit
 
+update
+
+	val update<'t> :  int * 't  -> unit
+
 ##Create/insert
 
-By default if storage is not exist 
+By default if storage is not exist `append` function create new file. For example, to insert any string in Dictionary<int, string> just use `append` function:
+
+	let add_string index =
+		Kevo.Store.append<string>(index, (index x), None)
 
 ##Read
 
@@ -42,21 +49,25 @@ To find any item by id, use findById:
 Use predicate function for search by any templates:
 
 	let query (x:WordItem) =
-		x.Wordst.Contains("слово")
+		x.Wordst.Contains("Local Street")
 	Kevo.Store.findByQuery<Address> query |> printfn "%A"
 
 
 ##Benchmarks
 
-Few tests from: `Kevo.Benchmark`
+Few tests from `Kevo.Benchmark`.
 
-For Intel Core i5 2500K / 16gb RAM:
+Test machine configuration is Intel Core i5 2500K / 16gb RAM:
 
 
 	Protobuf deserialization complete in 1431.623400 ms
 	Protobuf serialization complete in 311.327300 ms
 	Json.Net serialization complete in 1770.890400 ms
-	Json.Net deserialization complete in 3060.234400 ms
-	"Kevo.PerformanceTests+testWrapper@24[Kevo.Performance+WordItem]" Ellapsed Time: 2291.827700 ms
+	Json.Net deserialization complete in 3060.234400 ms	
 	testReadSumAllNones 564674759
-	"Kevo.PerformanceTests+testWrapper@25-3[Kevo.Performance+WordItem]" Ellapsed Time: 66.317000 ms	
+	
+
+### Append/Update
+
+
+![benchmark screenshot](https://github.com/unknownexception/kevo/raw/master/Kevo.Benchmarks/screenshot1.png)
