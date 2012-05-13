@@ -27,6 +27,11 @@ let append<'t> (i:int, o:'t, f:a option) =
         Kevo.AppendLog.appendSync<'t> i o
         if f.IsSome then f.Value()
         Kevo.AppendLog.appendAsync<'t> i o
+
+let update<'t> (i:int, o:'t) =    
+    Kevo.AppendLog.updateSync<'t> i o
+    Kevo.AppendLog.updateAsync<'t> i o
+    
         
 let memo<'t> f =     
     let cacheIndex = (f.GetType().GUID.ToString())

@@ -4,7 +4,8 @@ open System.Runtime.Caching
 
 let addToCache itemKey item =
     let cache = MemoryCache.Default;
-    lock cache (fun () -> cache.Add(itemKey, item, System.Runtime.Caching.MemoryCache.InfiniteAbsoluteExpiration))
+    lock cache (fun () ->         
+        cache.Set(itemKey, item, System.Runtime.Caching.MemoryCache.InfiniteAbsoluteExpiration))
 
 let getFromCache itemKey=
     let cache = MemoryCache.Default;

@@ -14,7 +14,8 @@ let getDictionary<'t> =
     let a = getFromCache cacheIndex<'t>     
     match a with         
         | null -> let b = deserialize<Dictionary<int, 't>> cacheIndex<'t>
-                  addToCache cacheIndex<'t> b |> printfn "%A added to cache %A" cacheIndex<'t>
+                  (addToCache cacheIndex<'t> b)
+                  printfn "%A added to cache" cacheIndex<'t> 
                   b
         | _ -> a :?> Dictionary<int, 't>
 

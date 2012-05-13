@@ -40,9 +40,24 @@ let inline testAppend c =
    Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<string>
    printfn "%A" Kevo.Core.getDictionary<string>.Count
 
+let inline testUpdate c =   
+   let timer = new System.Diagnostics.Stopwatch()
+   timer.Start()
+   [0..c] |> List.map (fun x -> Kevo.Store.update<string>(x, (string x)))  |> ignore
+   let perf = float c / timer.Elapsed.TotalMilliseconds
+   printfn "%i; %f" c perf
+   Kevo.MemoryCache.clearCache Kevo.Core.cacheIndex<string>
+   printfn "%A" Kevo.Core.getDictionary<string>.Count
+
    
-let testAppendLoop lmax step= 
-    [0..step..lmax] |> List.map (fun x -> testAppend x) |> ignore    
+let testAppendLoop lmax step type_of_append= 
+    [0..step..lmax]
+    |> List.map (fun x ->
+         match type_of_append with 
+            | "insert" -> testAppend x
+            | _ -> testUpdate x
+         )
+    |> ignore    
     System.Threading.Thread.Sleep(15000)
     Kevo.AppendLog.commit<string> |> ignore
     System.Threading.Thread.Sleep(1500)
@@ -50,20 +65,11 @@ let testAppendLoop lmax step=
     printfn "%A" Kevo.Core.getDictionary<string>.Count
 
 
-
   
-let testWrapper<'t> query =
- //   printfn "testReadSumAllNones %A " (duration (fun () -> testReadSumAllNones<'t> 100000))
- //   printfn "%A " (duration (fun () -> testStraightWildcardSearch<'t> query))
-//    printfn "%A " (duration (fun () -> testDeserializeFromProtoBuf<'t>))
- //     printfn "%A %A" (string typeof<Dictionary<int, 't>>) typeof<Dictionary<int, 't>>.GUID
- //     let a = Kevo.Core.getDictionary<'t>
- //     printfn "%A" a
-   //   printfn "%A %A" (string typeof<Dictionary<int, string>>) typeof<Dictionary<int, string>>.GUID
-   // printfn "%A" (duration "appenSync" (fun () -> Kevo.AppendLog.appendSync<int> 1 1))
-   // printfn "%A" (duration "commit" (fun () -> Kevo.AppendLog.commit<int>)) 
-   //   testAppendLoop 100000 10000
-       testAppendLoop 100000 10000
+let testWrapper<'t> query = 
+       //testAppendLoop 100000 10000
+       testAppendLoop 100000 10000 "insert"
+       testAppendLoop 100000 10000 "update"
 
 
    
