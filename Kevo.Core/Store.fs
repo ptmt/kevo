@@ -24,14 +24,16 @@ let findWhere (query:System.Func<KeyValuePair<int,'t>, bool>) =
 type a = unit->unit
 
 let append<'t> (i:int, o:'t, f:a option) =     
-        Kevo.AppendLog.appendSync<'t> i o
-        if f.IsSome then f.Value()
-        Kevo.AppendLog.appendAsync<'t> i o
+    Kevo.AppendLog.appendSync<'t> i o
+    if f.IsSome then f.Value()
+    Kevo.AppendLog.appendAsync<'t> i o
 
 let update<'t> (i:int, o:'t) =    
     Kevo.AppendLog.updateSync<'t> i o
     Kevo.AppendLog.updateAsync<'t> i o
-    
+
+let size<'t> = 
+    Kevo.Core.getDictionary<'t>.Count    
         
 let memo<'t> f =     
     let cacheIndex = (f.GetType().GUID.ToString())
