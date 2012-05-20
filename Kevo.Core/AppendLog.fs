@@ -17,7 +17,7 @@ let inline getpath typename second =
 
 [<ProtoContract>]
 type AppendLog<'t> = 
-    int * string * string * 't
+    int * string * string * 't option
 
 
 // json  
@@ -32,31 +32,26 @@ let inline appendJ<'t> o =
     serializer.Serialize(writer, append);   
 
 // protobuf 
-let inline appendCommon<'t> index o operation_type = 
+let inline appendCommon<'t> index (o:'t option) operation_type = 
     use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog<'t> = index, typeof<'t>.ToString(), operation_type, o        
+    let append:AppendLog<'t> = index, typeof<'t>.ToString(), operation_type, o
+//    let append:AppendLog<'t> = 
+//        if o.IsNone then
+//            index, typeof<'t>.ToString(), operation_type, null        
+//        else
+//            index, typeof<'t>.ToString(), operation_type, o.Value
     lock file (fun () -> Serializer.SerializeWithLengthPrefix<AppendLog<'t>>(file, append, PrefixStyle.Base128)
                          file.Close()) 
 
 
 let appendSync<'t> index o =     
-    appendCommon<'t> index o "insert"
+    appendCommon<'t> index (Some o) "insert"
 
 let updateSync<'t> index o = 
-    appendCommon<'t> index o "update"
+    appendCommon<'t> index (Some o) "update"
     
-   
-
-// quick write to append log
-// DEPRECATED
-let inline AppendSyncBinary<'t> o = 
-    let dict = Kevo.Core.getDictionary<'t>     
-    let formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter()
-    use file = new FileStream(getpath (string typeof<'t>) DateTime.Now.Second,  FileMode.Append, FileAccess.Write, FileShare.None)
-    let append:AppendLog<'t> = dict.Count, typeof<'t>.ToString(), "insert", o      
-    lock file (fun () -> formatter.Serialize(file, append))
-    
-
+let deleteSync<'t> index =     
+    appendCommon<'t> index None "delete"    
 
 
 let getFiles<'t> = //
@@ -64,17 +59,21 @@ let getFiles<'t> = //
 
 let inline getinfo (i, _, a, b) = i, a, b
 
-let inline saveToDict<'t> index item op = 
+let inline saveToDict<'t> index (item:'t option) op = 
     let dict = Kevo.Core.getDictionary<'t>
     match op with 
         | "insert" ->
                  if dict.ContainsKey(index) = false then
-                    dict.Add(index, item)
+                    dict.Add(index, item.Value)
         | "update" -> 
                  if dict.ContainsKey(index) = false then
-                    dict.Add(index, item)
+                    dict.Add(index, item.Value)
                  else
-                    dict.[index] <- item
+                    dict.[index] <- item.Value
+        | "delete" ->
+                 if dict.ContainsKey(index) = false then
+                    dict.Remove(index) |> ignore
+                
         | _ -> failwith "unsupported operation"  
     Kevo.Core.saveDictionary dict |> ignore
 
@@ -133,8 +132,8 @@ let appendAsync<'t> index o =
                         dict.Add(index, o)
                         Kevo.Core.saveDictionary dict |> ignore
                         commit<'t> |> ignore
-                    else
-                        commit<'t> |> ignore
+                    //else
+                    //    commit<'t> |> ignore
                     
                     )
         

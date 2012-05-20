@@ -34,6 +34,9 @@ let update<'t> (i:int, o:'t) =
 
 let size<'t> = 
     Kevo.Core.getDictionary<'t>.Count    
+
+let lastid<'t> =   
+    Kevo.Core.getDictionary<'t>.Max(fun (x:KeyValuePair<int, 't>) -> x.Key)
         
 let memo<'t> f =     
     let cacheIndex = (f.GetType().GUID.ToString())
@@ -45,4 +48,6 @@ let memo<'t> f =
         | _ -> a :?> 't
 
 let delete<'t> (id:int) = 
-    printfn "deleting"
+    Kevo.AppendLog.deleteSync<'t> id 
+    //Kevo.AppendLog.deleteAsync<'t> id
+

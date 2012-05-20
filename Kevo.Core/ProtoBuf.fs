@@ -3,11 +3,13 @@
 open ProtoBuf
 open System.Diagnostics
 open System.Reflection
+open System.Reflection.Emit
 
 let path filename =
     "C:\\data\\" + filename
 
-let serialize<'t> what where =     
+let serialize<'t> what where =    
+  //  let t = typeof<'t>. 
     let stopWatch = Stopwatch.StartNew()
     use file = System.IO.File.Create(path where)
     lock file (fun () -> Serializer.Serialize<'t>(file, what); 
