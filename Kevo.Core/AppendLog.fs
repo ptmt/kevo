@@ -71,7 +71,7 @@ let inline saveToDict<'t> index (item:'t option) op =
                  else
                     dict.[index] <- item.Value
         | "delete" ->
-                 if dict.ContainsKey(index) = false then
+                 if dict.ContainsKey(index) = true then
                     dict.Remove(index) |> ignore
                 
         | _ -> failwith "unsupported operation"  
