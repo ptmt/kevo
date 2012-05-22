@@ -36,7 +36,11 @@ let size<'t> =
     Kevo.Core.getDictionary<'t>.Count    
 
 let lastid<'t> =   
-    Kevo.Core.getDictionary<'t>.Max(fun (x:KeyValuePair<int, 't>) -> x.Key)
+    let dict:Dictionary<int, 't> = Kevo.Core.getDictionary<'t>
+    if dict = null || dict.Count = 0 then
+        0
+    else
+        dict.Max(fun (x:KeyValuePair<int, 't>) -> x.Key)
         
 let memo<'t> f =     
     let cacheIndex = (f.GetType().GUID.ToString())
