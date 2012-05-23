@@ -57,6 +57,9 @@ let deleteSync<'t> index =
 let getFiles<'t> = //
     System.IO.Directory.GetFiles(dataPath) |> Array.filter (fun x -> x.Contains(string typeof<'t>) && x.Contains(string DateTime.Now.Second) = false)
 
+let checkFilesForType<'t> =
+    System.IO.Directory.GetFiles(dataPath) |> Array.filter (fun x -> x.Contains(string typeof<'t>))
+
 let inline getinfo (i, _, a, b) = i, a, b
 
 let inline saveToDict<'t> index (item:'t option) op = 
@@ -152,3 +155,13 @@ let updateAsync<'t> index o =
                              commit<'t> |> ignore )
                
     } |> Async.Start 
+
+let waitForIt<'t> = 
+    let rec _waitForIt timeout currenttime = 
+        if currenttime < timeout && (checkFilesForType<'t>).Length > 0 then
+            System.Threading.Thread.Sleep(100)  
+            commit<'t> |> ignore
+            _waitForIt timeout (currenttime + 100)
+        else
+            (checkFilesForType<'t>).Length > 0
+    _waitForIt 5000 0
