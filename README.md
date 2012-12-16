@@ -1,6 +1,6 @@
 #KeVo
 
-KeVo is a Damn Easy Key-Value Store written in F# 3.0. It is in-memory store using System.Runtime.MemoryCache with full synchronized append log.
+KeVo is a Damn Easy Key-Value Store written in F# 3.0. It is a in-memory store which using System.Runtime.MemoryCache with full synchronized append log.
 
 It serialize all objects in Protocol Buffers (Json.NET or binary serialization optional)
 
@@ -70,4 +70,4 @@ Test machine configuration is Intel Core i5 2500K / 16gb RAM:
 ### Append/Update
 
 
-![benchmark screenshot](https://github.com/unknownexception/kevo/raw/master/Kevo.Benchmarks/screenshot1.png)
+![benchmark screenshot](https://github.com/unknownexception/kevo/raw/master/src/app/Kevo.Benchmarks/screenshot1.png)
