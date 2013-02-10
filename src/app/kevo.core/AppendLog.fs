@@ -3,7 +3,7 @@
 open System.Threading
 open System.Runtime.Serialization
 open System
-open Newtonsoft.Json
+
 open System.IO
 open ProtoBuf
 
@@ -20,16 +20,6 @@ type AppendLog<'t> =
     int * string * string * 't option
 
 
-// json  
-// DEPRECATED  
-let inline appendJ<'t> o =    
-
-    let dict = Kevo.Core.getDictionary<'t>      
-    let append:AppendLog<'t> = dict.Count, typeof<'t>.ToString(), "insert", o
-    let serializer = new JsonSerializer();        
-    use sw = new StreamWriter(getpath (string typeof<'t>) DateTime.Now.Second)
-    use writer = new JsonTextWriter(sw)
-    serializer.Serialize(writer, append);   
 
 // protobuf 
 let inline appendCommon<'t> index (o:'t option) operation_type = 
